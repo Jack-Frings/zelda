@@ -40,6 +40,9 @@ end
 
 function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
+    if key == 'r' then
+        love.event.quit("restart")
+    end
 end
 
 function love.keyboard.wasPressed(key)
