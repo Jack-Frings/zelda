@@ -50,6 +50,8 @@ function PlayState:passtoplayer(x, y, button, istouch, presses)
 end
 
 function PlayState:render()
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
     -- render dungeon and all entities separate from hearts GUI
     love.graphics.push()
     self.dungeon:render()

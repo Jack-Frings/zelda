@@ -147,6 +147,7 @@ function Room:generateWallsAndFloors()
 end
 
 function Room:update(dt)
+
     
     -- don't update anything if we are sliding to another room (we have offsets)
     if self.adjacentOffsetX ~= 0 or self.adjacentOffsetY ~= 0 then return end
@@ -157,6 +158,10 @@ function Room:update(dt)
         local entity = self.entities[i]
 
         -- remove entity from the table if health is <= 0
+        if entity.health <= 0 and not entity.dead then 
+            self.player.score = self.player.score + 100
+        end
+
         if entity.health <= 0 then
             entity.dead = true
         elseif not entity.dead then
