@@ -174,6 +174,9 @@ function Room:update(dt)
                 gStateMachine:change('game-over')
             end
         end
+
+        --collision between enemies and bullets in the room
+        
     end
 
     for k, object in pairs(self.objects) do

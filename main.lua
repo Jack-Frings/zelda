@@ -38,6 +38,16 @@ function love.resize(w, h)
     push:resize(w, h)
 end
 
+--[[only need mousepressed under Player.lua but putting it there doesn't
+work. Calls the gStateMachine's current state's passtoplayer function,
+but only if the current state has that function. Only PlayState has that
+function, which then passes the variables to Player.lua]]
+function love.mousepressed(x, y, button, istouch, presses)
+    if gStateMachine.current.passtoplayer then
+        gStateMachine.current:passtoplayer(x, y, button, istouch, presses)
+    end
+end
+
 function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
     if key == 'r' then

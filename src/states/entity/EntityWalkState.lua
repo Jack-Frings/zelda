@@ -28,7 +28,6 @@ function EntityWalkState:update(dt)
     self.bumped = false
 
     -- player movement variables for diagonal movement (moveright, moveleft, moveup, movedown)
-    -- FIX: room transitions when racing right
     if self.entity.mright and not self.entity.mleft then
         if self.entity.mup or self.entity.mdown then
             self.entity.x = self.entity.x + (self.entity.walkSpeed/math.sqrt(2))*dt

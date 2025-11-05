@@ -10,10 +10,22 @@ Player = Class{__includes = Entity}
 
 function Player:init(def)
     Entity.init(self, def)
+    self.shots = {}
 end
 
 function Player:update(dt)
     Entity.update(self, dt)
+
+    for k, shot in pairs(self.shots) do
+        shot:update(dt)
+    end
+end
+
+function Player:mousepressed(x, y, button, istouch, presses)
+    if button == 1 then
+        self.bullets = self.bullets - 1
+        table.insert(self.shots, Projectile{character = self, mousex = x, mousey = y})
+    end
 end
 
 function Player:collides(target)
@@ -24,6 +36,9 @@ function Player:collides(target)
 end
 
 function Player:render()
+    for k, shot in pairs(self.shots) do
+        shot:render()
+    end
     Entity.render(self)
     
     -- love.graphics.setColor(255, 0, 255, 255)

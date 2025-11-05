@@ -45,6 +45,10 @@ function PlayState:update(dt)
     self.dungeon:update(dt)
 end
 
+function PlayState:passtoplayer(x, y, button, istouch, presses)
+    self.player:mousepressed(x, y, button, istouch, presses)
+end
+
 function PlayState:render()
     -- render dungeon and all entities separate from hearts GUI
     love.graphics.push()
