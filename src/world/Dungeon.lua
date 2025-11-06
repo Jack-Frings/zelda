@@ -13,7 +13,7 @@ function Dungeon:init(player)
 
     -- container we could use to store rooms in a static dungeon, but unused here
     self.rooms = {}
-    self.rooms_cleared = 0
+    self.rooms_left = math.random(10, 20)
 
     -- current room we're operating in
     self.currentRoom = Room(self.player)
@@ -50,7 +50,7 @@ end
 ]]
 function Dungeon:beginShifting(shiftX, shiftY)
     -- commence shifting and create a new room to transition to
-    self.rooms_cleared = self.rooms_cleared + 1
+    self.rooms_left = self.rooms_left - 1
     self.player.score = self.player.score + 500
     self.shifting = true
     self.nextRoom = Room(self.player)

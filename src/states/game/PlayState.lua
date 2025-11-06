@@ -7,6 +7,7 @@
 ]]
 
 PlayState = Class{__includes = BaseState}
+local socket = require("socket")
 
 function PlayState:init()
     self.player = Player {
@@ -25,6 +26,9 @@ function PlayState:init()
         -- rendering and collision offset for spaced sprites
         offsetY = 5
     }
+
+    total_time = 90
+    start_time = math.floor(os.time() + 0.5)
 
     self.dungeon = Dungeon(self.player)
     self.currentRoom = Room(self.player)
@@ -50,13 +54,33 @@ function PlayState:passtoplayer(x, y, button, istouch, presses)
 end
 
 function PlayState:render()
-    love.graphics.setFont(gFonts['small'])
-    love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
-    love.graphics.printf("Rooms Cleared: " .. tostring(self.dungeon.rooms_cleared), 2, 10, VIRTUAL_WIDTH - 4, 'right')
     -- render dungeon and all entities separate from hearts GUI
     love.graphics.push()
     self.dungeon:render()
     love.graphics.pop()
+
+   
+    time_remaining = math.floor(total_time + start_time - math.floor(os.time() + 0.5) + 0.5)
+    if time_remaining <= 0 then 
+        gStateMachine:change('game-over')
+    end 
+
+    minutes = tostring(math.floor(time_remaining / 60))
+    seconds = time_remaining % 60
+
+    if seconds < 10 then 
+      seconds = "0" .. tostring(seconds)
+    else 
+      seconds = tostring(seconds)
+    end
+
+    display_time = minutes .. ":" .. seconds
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.printf(tostring(display_time), 2, 2, VIRTUAL_WIDTH, 'left')
+
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
+    love.graphics.printf("Rooms Left: " .. tostring(self.dungeon.rooms_left), 2, 10, VIRTUAL_WIDTH - 4, 'right')
 
     -- draw player hearts, top of screen
     local healthLeft = self.player.health
@@ -72,7 +96,7 @@ function PlayState:render()
         end
 
         love.graphics.draw(gTextures['hearts'], gFrames['hearts'][heartFrame],
-            (i - 1) * (TILE_SIZE + 1) + 2, 2)
+            (i-1) * (TILE_SIZE + 1) + 2, VIRTUAL_HEIGHT-18)
         
         healthLeft = healthLeft - 2
     end
@@ -81,10 +105,10 @@ function PlayState:render()
     for i = 1, 3 do
         if self.player.bullets >= i then
             love.graphics.draw(gTextures['bullet'], gFrames['bullet'][1],
-                (i-1) * (TILE_SIZE+1) + 2, VIRTUAL_HEIGHT-18)
+                (i-1) * (TILE_SIZE+1) + 60, VIRTUAL_HEIGHT-18)
         else
             love.graphics.draw(gTextures['bullet_empty'], gFrames['bullet_empty'][1],
-                (i-1) * (TILE_SIZE+1) + 2, VIRTUAL_HEIGHT-18)
+                (i-1) * (TILE_SIZE+1) + 60, VIRTUAL_HEIGHT-18)
         end
     end
 end
