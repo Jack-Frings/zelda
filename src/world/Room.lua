@@ -99,7 +99,9 @@ function Room:generateObjects()
             end
 
             gSounds['door']:play()
+            return true
         end
+        return false
     end
 
     -- add to list of objects in scene (only one switch for now)
@@ -156,6 +158,10 @@ function Room:update(dt)
     for i = #self.entities, 1, -1 do
         local entity = self.entities[i]
 
+        if entity.health <= 0 and not entity.dead then 
+            self.player.score = self.player.score + 100
+        end
+
         -- remove entity from the table if health is <= 0
         if entity.health <= 0 then
             entity.dead = true
@@ -176,7 +182,27 @@ function Room:update(dt)
         end
 
         --collision between enemies and bullets in the room
-        
+        for k, shot in pairs(self.player.shots) do
+            if shot:collides(entity) and not entity.dead then
+                entity:damage(3) --gun does 3 damage, change if u want
+                gSounds['hit-enemy']:play()
+                table.remove(self.player.shots, k)
+                k = k - 1
+
+                if entity.health <= 0 and math.random(3) == 1 then
+                    local ammo = GameObject(GAME_OBJECT_DEFS['bullet'], entity.x, entity.y)
+                    ammo.onCollide = function()
+                        self.player.bullets = self.player.bullets + 1
+                        for k, objs in pairs(self.objects) do
+                            if objs == ammo then
+                                table.remove(self.objects, k)
+                            end
+                        end
+                    end
+                    table.insert(self.objects, ammo)
+                end
+            end
+        end
     end
 
     for k, object in pairs(self.objects) do
@@ -185,6 +211,17 @@ function Room:update(dt)
         -- trigger collision callback on object
         if self.player:collides(object) then
             object:onCollide()
+        end
+
+        --bullet can open switch (advanced speedrun tech)
+        for k, shot in pairs(self.player.shots) do 
+            if shot:collides(object) and object.type == 'switch' then
+                local button_unpressed = object:onCollide()
+                if button_unpressed then --don't remove bullet if button is pressed
+                    table.remove(self.player.shots, k) 
+                    k = k - 1
+                end
+            end
         end
     end
 end

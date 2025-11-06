@@ -48,7 +48,6 @@ end
     Prepares for the camera shifting process, kicking off a tween of the camera position.
 ]]
 function Dungeon:beginShifting(shiftX, shiftY)
-
     -- commence shifting and create a new room to transition to
     self.shifting = true
     self.nextRoom = Room(self.player)
@@ -115,6 +114,7 @@ end
     current room.
 ]]
 function Dungeon:finishShifting()
+    self.player.shots = {}
 
     -- reset camera and deactivate shifting to avoid translation
     self.cameraX = 0

@@ -24,7 +24,18 @@ GAME_OBJECT_DEFS = {
             }
         }
     },
-    ['pot'] = {
-        -- TODO
+    ['bullet'] = { --Ground bullet to pick up
+        type = 'bullet',
+        texture = 'bullet',
+        frame = 1,
+        width = 16,
+        height = 16,
+        solid = false,
+        defaultState = 'default',
+        states = {
+            ['default'] = {
+                frame = 1
+            }
+        }
     }
 }

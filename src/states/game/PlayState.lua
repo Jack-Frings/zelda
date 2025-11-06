@@ -50,6 +50,8 @@ function PlayState:passtoplayer(x, y, button, istouch, presses)
 end
 
 function PlayState:render()
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
     -- render dungeon and all entities separate from hearts GUI
     love.graphics.push()
     self.dungeon:render()
@@ -69,8 +71,19 @@ function PlayState:render()
         end
 
         love.graphics.draw(gTextures['hearts'], gFrames['hearts'][heartFrame],
-            (i - 1) * (TILE_SIZE + 1), 2)
+            (i - 1) * (TILE_SIZE + 1) + 2, 2)
         
         healthLeft = healthLeft - 2
+    end
+
+    local bullet_shade
+    for i = 1, 3 do
+        if self.player.bullets >= i then
+            love.graphics.draw(gTextures['bullet'], gFrames['bullet'][1],
+                (i-1) * (TILE_SIZE+1) + 2, VIRTUAL_HEIGHT-18)
+        else
+            love.graphics.draw(gTextures['bullet_empty'], gFrames['bullet_empty'][1],
+                (i-1) * (TILE_SIZE+1) + 2, VIRTUAL_HEIGHT-18)
+        end
     end
 end

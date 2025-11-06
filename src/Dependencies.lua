@@ -38,6 +38,8 @@ require 'src/states/game/StartState'
 
 gTextures = {
     ['tiles'] = love.graphics.newImage('graphics/tilesheet.png'),
+    ['bullet'] = love.graphics.newImage('graphics/bullet.png'),
+    ['bullet_empty'] = love.graphics.newImage('graphics/bullet_empty.png'),
     ['background'] = love.graphics.newImage('graphics/background.png'),
     ['character-walk'] = love.graphics.newImage('graphics/character_walk.png'),
     ['character-swing-sword'] = love.graphics.newImage('graphics/character_swing_sword.png'),
@@ -52,6 +54,8 @@ gFrames = {
     ['character-swing-sword'] = GenerateQuads(gTextures['character-swing-sword'], 32, 32),
     ['entities'] = GenerateQuads(gTextures['entities'], 16, 16),
     ['hearts'] = GenerateQuads(gTextures['hearts'], 16, 16),
+    ['bullet'] = GenerateQuads(gTextures['bullet'], 16, 16),
+    ['bullet_empty'] = GenerateQuads(gTextures['bullet_empty'],16,16),
     ['switches'] = GenerateQuads(gTextures['switches'], 16, 18)
 }
 

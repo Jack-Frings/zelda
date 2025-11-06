@@ -63,9 +63,22 @@ function PlayerSwingSwordState:update(dt)
     
     -- check if hitbox collides with any entities in the scene
     for k, entity in pairs(self.dungeon.currentRoom.entities) do
-        if entity:collides(self.swordHitbox) then
+        if entity:collides(self.swordHitbox) and entity.dead == false then
             entity:damage(1)
             gSounds['hit-enemy']:play()
+
+            if math.random(3) == 1 then
+                local ammo = GameObject(GAME_OBJECT_DEFS['bullet'], entity.x, entity.y)
+                ammo.onCollide = function()
+                    self.player.bullets = self.player.bullets + 1
+                    for k, objs in pairs(self.dungeon.currentRoom.objects) do
+                        if objs == ammo then
+                            table.remove(self.dungeon.currentRoom.objects, k)
+                        end
+                    end
+                end
+                table.insert(self.dungeon.currentRoom.objects, ammo)
+            end
         end
     end
 

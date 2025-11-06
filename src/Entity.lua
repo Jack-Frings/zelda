@@ -106,7 +106,7 @@ function Entity:processAI(params, dt)
 end
 
 function Entity:render(adjacentOffsetX, adjacentOffsetY)
-    
+    love.graphics.setColor(1, 1, 1, 1)
     -- draw sprite slightly transparent if invulnerable every 0.04 seconds
     if self.invulnerable and self.flashTimer > 0.06 then
         self.flashTimer = 0

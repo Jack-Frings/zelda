@@ -7,30 +7,20 @@
 ]]
 
 --Bullet class, basically, unless there is another projectile to be added
---[[
-    TO-DO
-    fix bullets staying on screen after room transition
-    bullet despawns offscreen
-    bullet hits enemies
-    bullet despawns on enemy hit
-    enemy can drop bullets
-    bullets variable decreases on shot
-    cap max bullets at THREE
-    laser???
-]]
 
 Projectile = Class{}
 
 function Projectile:init(def)
     self.x = def.character.x + def.character.width/2
     self.y = def.character.y + def.character.height/2
-    self.width = 5
-    self.height = 5
+    self.width = 4
+    self.height = 4
     self.dx = 0
     self.dy = 0
     self:calcSlope(def)
+    self.rotation = self:calcRotation(def)
 
-    self.BULLET_SPEED = 200
+    self.BULLET_SPEED = 400
 end
 
 function Projectile:calcSlope(def) -- calculate dx and dy
@@ -50,6 +40,15 @@ function Projectile:calcSlope(def) -- calculate dx and dy
     self.dy = self.dy / self.total_distance
 end
 
+function Projectile:calcRotation(def)
+    if self.dx >= 0 then
+        self.y = self.y - 5
+        return math.atan(self.dy/self.dx)
+    end
+    self.y = self.y + 5
+    return math.atan(self.dy/self.dx) + math.pi
+end
+
 function Projectile:update(dt)
     self.x = self.x + self.dx*dt*self.BULLET_SPEED
     self.y = self.y + self.dy*dt*self.BULLET_SPEED
@@ -65,6 +64,5 @@ function Projectile:offscreen()
 end
 
 function Projectile:render()
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.rectangle('fill',self.x,self.y,self.width,self.height)
+    love.graphics.draw(gTextures['bullet'], gFrames['bullet'][1],self.x,self.y,self.rotation,0.75,0.75)
 end

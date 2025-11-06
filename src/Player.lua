@@ -10,6 +10,7 @@ Player = Class{__includes = Entity}
 
 function Player:init(def)
     Entity.init(self, def)
+    self.score = 0
     self.shots = {}
 end
 
@@ -18,11 +19,19 @@ function Player:update(dt)
 
     for k, shot in pairs(self.shots) do
         shot:update(dt)
+        if shot:offscreen() then
+            table.remove(self.shots, k)
+            k = k-1
+        end
+    end
+
+    if self.bullets >= 3 then  --Can only have 3 bullets max
+        self.bullets = 3
     end
 end
 
 function Player:mousepressed(x, y, button, istouch, presses)
-    if button == 1 then
+    if button == 1 and self.bullets > 0 then
         self.bullets = self.bullets - 1
         table.insert(self.shots, Projectile{character = self, mousex = x, mousey = y})
     end
