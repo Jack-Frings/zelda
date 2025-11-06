@@ -163,11 +163,6 @@ function Room:update(dt)
             self.player.score = self.player.score + 100
         end
 
-        -- remove entity from the table if health is <= 0
-        if entity.health <= 0 and not entity.dead then 
-            self.player.score = self.player.score + 100
-        end
-
         if entity.health <= 0 then
             entity.dead = true
         elseif not entity.dead then

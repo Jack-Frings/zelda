@@ -52,6 +52,7 @@ end
 function PlayState:render()
     love.graphics.setFont(gFonts['small'])
     love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
+    love.graphics.printf("Rooms Cleared: " .. tostring(self.dungeon.rooms_cleared), 2, 10, VIRTUAL_WIDTH - 4, 'right')
     -- render dungeon and all entities separate from hearts GUI
     love.graphics.push()
     self.dungeon:render()
