@@ -9,6 +9,7 @@
 Room = Class{}
 
 function Room:init(player)
+    self.is_boss_room = false 
     self.width = MAP_WIDTH
     self.height = MAP_HEIGHT
 

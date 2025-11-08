@@ -7,7 +7,6 @@
 ]]
 
 PlayState = Class{__includes = BaseState}
-local socket = require("socket")
 
 function PlayState:init()
     self.player = Player {
@@ -59,28 +58,30 @@ function PlayState:render()
     self.dungeon:render()
     love.graphics.pop()
 
-   
-    time_remaining = math.floor(total_time + start_time - math.floor(os.time() + 0.5) + 0.5)
-    if time_remaining <= 0 then 
-        gStateMachine:change('game-over')
-    end 
+    if not self.dungeon.currentRoom.is_boss_room then   
+        time_remaining = math.floor(total_time + start_time - math.floor(os.time() + 0.5) + 0.5)
+        if time_remaining <= 0 then 
+            gStateMachine:change('game-over')
+        end 
 
-    minutes = tostring(math.floor(time_remaining / 60))
-    seconds = time_remaining % 60
+        minutes = tostring(math.floor(time_remaining / 60))
+        seconds = time_remaining % 60
 
-    if seconds < 10 then 
-      seconds = "0" .. tostring(seconds)
-    else 
-      seconds = tostring(seconds)
+        if seconds < 10 then 
+          seconds = "0" .. tostring(seconds)
+        else 
+          seconds = tostring(seconds)
+        end
+
+        display_time = minutes .. ":" .. seconds
+        love.graphics.setFont(gFonts['medium'])
+        love.graphics.printf(tostring(display_time), 2, 2, VIRTUAL_WIDTH, 'left')
+
+        love.graphics.setFont(gFonts['small'])
+        love.graphics.printf("Rooms Left: " .. tostring(self.dungeon.rooms_left), 2, 10, VIRTUAL_WIDTH - 4, 'right')
     end
-
-    display_time = minutes .. ":" .. seconds
-    love.graphics.setFont(gFonts['medium'])
-    love.graphics.printf(tostring(display_time), 2, 2, VIRTUAL_WIDTH, 'left')
-
-    love.graphics.setFont(gFonts['small'])
+    
     love.graphics.printf("Score: " .. tostring(self.player.score), 0, 2, VIRTUAL_WIDTH - 4, 'right')
-    love.graphics.printf("Rooms Left: " .. tostring(self.dungeon.rooms_left), 2, 10, VIRTUAL_WIDTH - 4, 'right')
 
     -- draw player hearts, top of screen
     local healthLeft = self.player.health

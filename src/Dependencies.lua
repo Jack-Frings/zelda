@@ -22,6 +22,7 @@ require 'src/Util'
 require 'src/world/Doorway'
 require 'src/world/Dungeon'
 require 'src/world/Room'
+require 'src/world/BossRoom'
 
 require 'src/states/BaseState'
 
