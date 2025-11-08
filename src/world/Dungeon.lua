@@ -13,7 +13,7 @@ function Dungeon:init(player)
 
     -- container we could use to store rooms in a static dungeon, but unused here
     self.rooms = {}
-    self.rooms_left = 1
+    self.rooms_left = 15
 
     -- current room we're operating in
     self.currentRoom = Room(self.player)
