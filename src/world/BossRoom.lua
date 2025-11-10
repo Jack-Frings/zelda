@@ -200,13 +200,6 @@ end
 
 
 function BossRoom:render()
-    health_bar_fraction = (self.entities[1].health + self.entities[2].health) / self.total_health
-    print(health_bar_fraction)
-    love.graphics.printf("Slime Boss", 0, 0, VIRTUAL_WIDTH, "left")
-    -- love.graphics.printf("Health", 0, 10, VIRTUAL_WIDTH, "left")
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 50, 2, math.floor(280 * health_bar_fraction), 10)
-    love.graphics.setColor(1, 1, 1)
     for y = 1, self.height do
         for x = 1, self.width do
             local tile = self.tiles[y][x]
@@ -229,8 +222,14 @@ function BossRoom:render()
     for k, entity in pairs(self.entities) do
         if not entity.dead then entity:scale_render(self.adjacentOffsetX, self.adjacentOffsetY, 2) end
     end
-
-    if self.killed_bosses then 
+    if not self.killed_bosses then 
+        health_bar_fraction = (self.entities[1].health + self.entities[2].health) / self.total_health
+        print(health_bar_fraction)
+        love.graphics.printf("Slime Bosses", 0, 0, VIRTUAL_WIDTH, "left")
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", 55, 2, math.floor(270 * health_bar_fraction), 10)
+        love.graphics.setColor(1, 1, 1)
+    else
         love.graphics.setFont(gFonts['medium'])
         love.graphics.printf("YOU WIN!", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
         love.graphics.printf("THANKS FOR SAVING THE KINGDOM!", 0, VIRTUAL_HEIGHT / 2 + 20, VIRTUAL_WIDTH, "center")
