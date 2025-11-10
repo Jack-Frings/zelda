@@ -33,7 +33,7 @@ function Room:init(player)
 
     -- reference to player for collisions, etc.
     self.player = player
-    self.player:goInvulnerable(1.5)
+    self.player:goInvulnerable(1)
 
     -- used for centering the dungeon rendering
     self.renderOffsetX = MAP_RENDER_OFFSET_X

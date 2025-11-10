@@ -40,6 +40,7 @@ function BossRoom:init(player, shiftX, shiftY)
 
     -- reference to player for collisions, etc.
     self.player = player
+    self.player:goInvulnerable(1)
     self.player.health = 6
 
     -- used for centering the dungeon rendering
