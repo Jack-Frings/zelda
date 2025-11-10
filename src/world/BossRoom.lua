@@ -19,6 +19,8 @@ function BossRoom:init(player, shiftX, shiftY)
     self.entities = {}
     self:spawn_boss()
 
+    self.total_health = 40
+
     self.killed_bosses = false
 
     self.objects = {}
@@ -70,6 +72,7 @@ function BossRoom:spawn_boss()
 
             health = 20
         })
+
         self.entities[i].stateMachine = StateMachine {
             ['vertical'] = function() return BossVerticalState(self.entities[i]) end,
             ['horizontal'] = function() return BossHorizontalState(self.entities[i]) end
@@ -116,10 +119,6 @@ function BossRoom:generateWallsAndFloors()
 end
 
 function BossRoom:update(dt)
-    print(self.entities[1].health + self.entities[2].health)
-    self.entities[1].health = 0
-    self.entities[2].health = 0
-
     if self.entities[1].dead and self.entities[2].dead and not self.killed_bosses then 
         self.player.score = self.player.score + 2000
         self.killed_bosses = true 
@@ -201,6 +200,13 @@ end
 
 
 function BossRoom:render()
+    health_bar_fraction = (self.entities[1].health + self.entities[2].health) / self.total_health
+    print(health_bar_fraction)
+    love.graphics.printf("Slime Boss", 0, 0, VIRTUAL_WIDTH, "left")
+    -- love.graphics.printf("Health", 0, 10, VIRTUAL_WIDTH, "left")
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", 50, 2, math.floor(280 * health_bar_fraction), 10)
+    love.graphics.setColor(1, 1, 1)
     for y = 1, self.height do
         for x = 1, self.width do
             local tile = self.tiles[y][x]
