@@ -6,23 +6,25 @@
     cogden@cs50.harvard.edu
 ]]
 
-EntityWalkState = Class{__includes = BaseState}
+BossVerticalState = Class{__includes = BaseState}
 
-function EntityWalkState:init(entity, dungeon)
+function BossVerticalState:init(entity, dungeon)
     self.entity = entity
-    self.entity:changeAnimation('walk-down')
 
     self.dungeon = dungeon
 
+    self.entity.direction = math.random(0, 1) == 1 and "up" or "down"
+    self.entity:changeAnimation("walk-" .. self.entity.direction)
+
     -- used for AI control
-    self.moveDuration = 0
-    self.movementTimer = 0
+    self.movementTimer = 0 
+    self.moveDuration = math.random(5, 10)
 
     -- keeps track of whether we just hit a wall
     self.bumped = false
 end
 
-function EntityWalkState:update(dt)
+function BossVerticalState:update(dt)
     
     -- assume we didn't hit a wall
     self.bumped = false
@@ -116,33 +118,26 @@ function EntityWalkState:update(dt)
     end
 end
 
-function EntityWalkState:processAI(params, dt)
+function BossVerticalState:processAI(params, dt)
     local room = params.room
-    local directions = {'left', 'right', 'up', 'down'}
 
-    if self.moveDuration == 0 or self.bumped then
+    if self.bumped then
+        if self.entity.direction == "up" then 
+            self.entity.direction = "down"
+        elseif self.entity.direction == "down" then 
+            self.entity.direction = "up"
+        end
         
-        -- set an initial move duration and direction
-        self.moveDuration = math.random(5)
-        self.entity.direction = directions[math.random(#directions)]
         self.entity:changeAnimation('walk-' .. tostring(self.entity.direction))
     elseif self.movementTimer > self.moveDuration then
-        self.movementTimer = 0
-
-        -- chance to go idle
-        if math.random(3) == 1 then
-            self.entity:changeState('idle')
-        else
-            self.moveDuration = math.random(5)
-            self.entity.direction = directions[math.random(#directions)]
-            self.entity:changeAnimation('walk-' .. tostring(self.entity.direction))
-        end
+        print("change to horizontal")
+        self.entity:changeState("horizontal")
     end
 
     self.movementTimer = self.movementTimer + dt
 end
 
-function EntityWalkState:render()
+function BossVerticalState:render()
     local anim = self.entity.currentAnimation
     love.graphics.draw(gTextures[anim.texture], gFrames[anim.texture][anim:getCurrentFrame()],
         math.floor(self.entity.x - self.entity.offsetX), math.floor(self.entity.y - self.entity.offsetY))
@@ -153,7 +148,7 @@ function EntityWalkState:render()
     -- love.graphics.setColor(255, 255, 255, 255)
 end
 
-function EntityWalkState:scale_render(scale)
+function BossVerticalState:scale_render(scale)
     local anim = self.entity.currentAnimation
     love.graphics.draw(gTextures[anim.texture], 
                        gFrames[anim.texture][anim:getCurrentFrame()],

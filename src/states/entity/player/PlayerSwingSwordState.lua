@@ -16,6 +16,8 @@ function PlayerSwingSwordState:init(player, dungeon)
     self.player.offsetY = 5
     self.player.offsetX = 8
 
+    self.checked_bullet_drop = false
+
     -- create hitbox based on where the player is and facing
     local direction = self.player.direction
     local hitboxX, hitboxY, hitboxWidth, hitboxHeight
@@ -62,25 +64,29 @@ end
 function PlayerSwingSwordState:update(dt)
     
     -- check if hitbox collides with any entities in the scene
-    for k, entity in pairs(self.dungeon.currentRoom.entities) do
-        if entity:collides(self.swordHitbox) and entity.dead == false then
-            entity:damage(1)
-            gSounds['hit-enemy']:play()
+    if not self.checked_bullet_drop then  
+      for k, entity in pairs(self.dungeon.currentRoom.entities) do
+          if entity:collides(self.swordHitbox) and entity.dead == false then
+              entity:damage(1)
+              gSounds['hit-enemy']:play()
 
-            if math.random(3) == 1 then
-                local ammo = GameObject(GAME_OBJECT_DEFS['bullet'], entity.x, entity.y)
-                ammo.onCollide = function()
-                    self.player.bullets = self.player.bullets + 1
-                    for k, objs in pairs(self.dungeon.currentRoom.objects) do
-                        if objs == ammo then
-                            table.remove(self.dungeon.currentRoom.objects, k)
-                        end
-                    end
-                end
-                table.insert(self.dungeon.currentRoom.objects, ammo)
-            end
-        end
+              if math.random(3) == 1 then
+                  local ammo = GameObject(GAME_OBJECT_DEFS['bullet'], entity.x, entity.y)
+                  ammo.onCollide = function()
+                      self.player.bullets = self.player.bullets + 1
+                      for k, objs in pairs(self.dungeon.currentRoom.objects) do
+                          if objs == ammo then
+                              table.remove(self.dungeon.currentRoom.objects, k)
+                          end
+                      end
+                  end
+                  table.insert(self.dungeon.currentRoom.objects, ammo)
+              end
+          end
+      end
     end
+    self.checked_bullet_drop = true
+
 
     -- if we've fully elapsed through one cycle of animation, change back to idle state
     if self.player.currentAnimation.timesPlayed > 0 then
