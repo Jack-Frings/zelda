@@ -43,3 +43,18 @@ function EntityIdleState:render()
     -- love.graphics.rectangle('line', self.entity.x, self.entity.y, self.entity.width, self.entity.height)
     -- love.graphics.setColor(255, 255, 255, 255)
 end
+
+function EntityIdleState:scale_render(scale)
+    local anim = self.entity.currentAnimation
+    love.graphics.draw(gTextures[anim.texture], 
+                       gFrames[anim.texture][anim:getCurrentFrame()],
+                       math.floor(self.entity.x - self.entity.offsetX), 
+                       math.floor(self.entity.y - self.entity.offsetY),
+                       0,            -- rotation
+                       scale,        -- scale X
+                       scale)        -- scale Y
+    
+    -- love.graphics.setColor(255, 0, 255, 255)
+    -- love.graphics.rectangle('line', self.entity.x, self.entity.y, self.entity.width, self.entity.height)
+    -- love.graphics.setColor(255, 255, 255, 255)
+end

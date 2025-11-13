@@ -23,11 +23,15 @@ require 'src/Util'
 require 'src/world/Doorway'
 require 'src/world/Dungeon'
 require 'src/world/Room'
+require 'src/world/BossRoom'
 
 require 'src/states/BaseState'
 
 require 'src/states/entity/EntityIdleState'
 require 'src/states/entity/EntityWalkState'
+
+require 'src/states/entity/BossVerticalState'
+require 'src/states/entity/BossHorizontalState'
 
 require 'src/states/entity/player/PlayerIdleState'
 require 'src/states/entity/player/PlayerSwingSwordState'
