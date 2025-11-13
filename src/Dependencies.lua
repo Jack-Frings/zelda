@@ -7,6 +7,7 @@ Event = require 'lib/knife.event'
 push = require 'lib/push'
 Timer = require 'lib/knife.timer'
 
+require 'src/Achievements'
 require 'src/Animation'
 require 'src/constants'
 require 'src/Entity'

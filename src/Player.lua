@@ -10,8 +10,11 @@ Player = Class{__includes = Entity}
 
 function Player:init(def)
     Entity.init(self, def)
+
     self.score = 0
     self.shots = {}
+    self.bullets = 3        -- make sure bullets exist
+    self.hitCounter = 0     -- count hits taken for Survivalist
 end
 
 function Player:update(dt)
@@ -25,7 +28,8 @@ function Player:update(dt)
         end
     end
 
-    if self.bullets >= 3 then  --Can only have 3 bullets max
+    -- cap bullets at 3
+    if self.bullets > 3 then
         self.bullets = 3
     end
 end
@@ -35,6 +39,14 @@ function Player:mousepressed(x, y, button, istouch, presses)
         self.bullets = self.bullets - 1
         table.insert(self.shots, Projectile{character = self, mousex = x, mousey = y})
     end
+end
+
+-- override the default damage function to track hits
+function Player:damage(amount)
+    self.health = math.max(0, self.health - amount)
+    
+    -- increment hit counter for Survivalist achievement
+    self.hitCounter = self.hitCounter + 1
 end
 
 function Player:collides(target)
@@ -50,6 +62,7 @@ function Player:render()
     end
     Entity.render(self)
     
+    -- debug rectangle if needed
     -- love.graphics.setColor(255, 0, 255, 255)
     -- love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
     -- love.graphics.setColor(255, 255, 255, 255)
