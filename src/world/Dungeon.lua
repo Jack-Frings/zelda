@@ -13,7 +13,7 @@ function Dungeon:init(player)
 
     -- container we could use to store rooms in a static dungeon, but unused here
     self.rooms = {}
-    self.rooms_left = 1
+    self.rooms_left = 15
 
     -- current room we're operating in
     self.currentRoom = Room(self.player)
@@ -128,6 +128,10 @@ function Dungeon:finishShifting()
     self.cameraX = 0
     self.cameraY = 0
     self.shifting = false
+
+    if gStateMachine.current and gStateMachine.current.leaveRoom then
+        gStateMachine.current:leaveRoom()
+    end
 
     -- point to transitioned room as the new active room, pointing to an empty room next
     self.currentRoom = self.nextRoom

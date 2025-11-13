@@ -38,6 +38,9 @@ function PlayState:init()
         ['swing-sword'] = function() return PlayerSwingSwordState(self.player, self.dungeon) end
     }
     self.player:changeState('idle')
+
+    -- Achievements manager
+    self.achievementManager = Achievements()
 end
 
 function PlayState:update(dt)
@@ -46,10 +49,28 @@ function PlayState:update(dt)
     end
 
     self.dungeon:update(dt)
+    -- Update achievements (notifications, etc.)
+    self.achievementManager:update(dt)
+
+    -- Survivalist: start timer only after 5 hits
+    local survival = self.achievementManager.achievements['Survivalist']
+    if self.player.hitCounter >= 5 and not survival.unlocked then
+        survival.timer = survival.timer + dt
+        if survival.timer >= survival.goal then
+            self.achievementManager:unlock('Survivalist')
+        end
+    end
 end
 
 function PlayState:passtoplayer(x, y, button, istouch, presses)
     self.player:mousepressed(x, y, button, istouch, presses)
+end
+
+-- Called when leaving a room to check Pacifist
+function PlayState:leaveRoom()
+    if self.achievementManager then
+        self.achievementManager:checkPacifist()
+    end
 end
 
 function PlayState:render()
@@ -112,4 +133,7 @@ function PlayState:render()
                 (i-1) * (TILE_SIZE+1) + 60, VIRTUAL_HEIGHT-18)
         end
     end
+
+    -- Render achievement notifications
+    self.achievementManager:render()
 end

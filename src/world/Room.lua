@@ -163,6 +163,12 @@ function Room:update(dt)
 
         if entity.health <= 0 and not entity.dead then 
             self.player.score = self.player.score + 100
+
+            -- Slayer & Pacifist tracking
+            if gStateMachine.current.achievementManager then
+                gStateMachine.current.achievementManager:increment('Slayer')
+                gStateMachine.current.achievementManager:registerKill()
+            end
         end
 
         if entity.health <= 0 then
@@ -177,6 +183,9 @@ function Room:update(dt)
             gSounds['hit-player']:play()
             self.player:damage(1)
             self.player:goInvulnerable(1.5)
+
+            -- Survivalist hit counter
+            self.player.hitCounter = (self.player.hitCounter or 0) + 1
 
             if self.player.health == 0 then
                 gStateMachine:change('game-over')

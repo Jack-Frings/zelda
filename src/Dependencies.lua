@@ -8,6 +8,7 @@ push = require 'lib/push'
 Timer = require 'lib/knife.timer'
 
 require 'src/Animation'
+require 'src/Achievements'
 require 'src/constants'
 require 'src/Entity'
 require 'src/entity_defs'
